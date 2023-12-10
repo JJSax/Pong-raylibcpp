@@ -30,7 +30,6 @@ public:
 	static constexpr vec2 dim = {10, 100};
 	Paddle(vec2 pos) {
 		this->pos = pos;
-		// this->rect = Rectangle(pos.x, pos.y, this->dim.x, this->dim.y);
 	}
 
 	void setHeight(int y) {
@@ -76,7 +75,6 @@ public:
 	}
 
 	bool checkCollision(const Paddle& p) {
-		// TODO stuff and things
 		return CheckCollisionCircleRec(
 			Vector2{this->pos.x, this->pos.y}, 
 			this->radius, 
@@ -132,7 +130,7 @@ int main(void) {
 			int midy = other.pos.y + other.dim.y/2;
 			int diff = ball.pos.y - midy;
 			ball.speed.y = diff/7 + (other.pos.y - other.lastPos.y)*0.7;
-			
+			ball.pos.x = ball.pos.x > windowWidth/2 ? other.pos.x - ball.radius : other.pos.x + other.dim.x + ball.radius;
 		}
 
 		player.setHeight(GetMouseY() - player.dim.y/2);
@@ -143,6 +141,8 @@ int main(void) {
 		BeginDrawing();
 		ClearBackground(BLACK);
 		DrawLine(windowWidth/2, 0, windowWidth/2, windowHeight, WHITE);
+		DrawText(TextFormat("%i", player.score), 20, windowHeight - 50, 40, WHITE);
+		DrawText(TextFormat("%i", opponent.score), windowWidth - 40, windowHeight - 50, 40, WHITE);
 		ball.draw();
 
 		player.draw();
