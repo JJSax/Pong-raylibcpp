@@ -1,7 +1,8 @@
 
-extern "C" {
 #include <raylib.h>
-}
+#include <vector>
+#include <math.h>
+#include <random>
 
 const int windowWidth = 1280;
 const int windowHeight = 720;
@@ -95,13 +96,21 @@ public:
 
 };
 
-
 int main(void) {
 	const int paddlePadding = 10;
 
 	Ball ball(vec2 {windowWidth/2, windowHeight/2});
 	Paddle player(vec2 {paddlePadding, windowHeight/2 - Paddle::dim.y/2});
 	Paddle opponent(vec2 {windowWidth - Paddle::dim.x - paddlePadding, windowHeight/2 - Paddle::dim.y/2});
+
+	const int nAngles = 20;
+	std::vector<float> angles;
+	std::vector<float> speed;
+
+	for (int i = 0; i < nAngles; i++) {
+		angles.emplace_back(((double) rand() / (RAND_MAX)    ));
+		speed.emplace_back( ((double) rand() / (RAND_MAX) / 5));
+	}
 
 	InitWindow(windowWidth, windowHeight, "Pong");
 	SetTargetFPS(60);
@@ -137,7 +146,14 @@ int main(void) {
 		}
 
 		player.setHeight(GetMouseY() - player.dim.y/2);
-		opponent.setHeight(ball.pos.y - opponent.dim.y/2);
+
+		float heightAdj = 0;
+		for (int  i = 0; i < angles.size(); ++i) {
+			heightAdj += sin(angles.at(i)) * 15;
+			angles.at(i) += speed.at(i);
+			angles.at(i)  = fmod(angles.at(i), PI * 2); // wrap around at
+		}
+		opponent.setHeight(ball.pos.y - opponent.dim.y/2 + heightAdj);
 
 
 		//draw
