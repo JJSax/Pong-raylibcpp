@@ -106,7 +106,6 @@ int main(void) {
 	const int nAngles = 20;
 	std::vector<float> angles;
 	std::vector<float> speed;
-
 	for (int i = 0; i < nAngles; i++) {
 		angles.emplace_back(((double) rand() / (RAND_MAX)    ));
 		speed.emplace_back( ((double) rand() / (RAND_MAX) / 5));
@@ -148,8 +147,8 @@ int main(void) {
 		player.setHeight(GetMouseY() - player.dim.y/2);
 
 		float heightAdj = 0;
-		for (int  i = 0; i < angles.size(); ++i) {
-			heightAdj += sin(angles.at(i)) * 15;
+		for (int  i = 0; i < angles.size(); i++) {
+			heightAdj += sin(angles.at(i)) * abs(ball.speed.y * 1.3);
 			angles.at(i) += speed.at(i);
 			angles.at(i)  = fmod(angles.at(i), PI * 2); // wrap around at
 		}
