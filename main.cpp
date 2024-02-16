@@ -6,6 +6,11 @@ extern "C" {
 const int windowWidth = 1280;
 const int windowHeight = 720;
 
+const Color Green = Color{38, 185, 154, 255};
+const Color Dark_Green = Color{20, 160, 133, 255};
+const Color Light_Green = Color{129, 204, 184, 255};
+const Color Yellow = Color{243, 213, 154, 255};
+
 struct vec2 {
 	float x, y;
 
@@ -36,25 +41,24 @@ public:
 		this->lastPos = this->pos;
 		this->pos.y = y;
 		if (this->pos.y < 0) {
-			this->pos.y == 0;
+			this->pos.y = 0;
 		}
 		if (this->pos.y + this->dim.y > windowHeight) {
-			this->pos.y == windowHeight - this->dim.y;
+			this->pos.y = windowHeight - this->dim.y;
 		}
 	}
 
 	void draw() {
-		DrawRectangle(this->pos.x, this->pos.y, dim.x, dim.y, WHITE);
+		DrawRectangleRounded(Rectangle{pos.x, pos.y, dim.x, dim.y}, 0.7, 0, WHITE);
 	}
 
 };
-
 
 class Ball {
 public:
 	vec2 pos;
 	vec2 speed;
-	int radius;
+	int radius = 10;
 
 	Ball(vec2 pos) {
 		this->reset(pos);
@@ -63,7 +67,6 @@ public:
 	void reset(vec2 pos) {
 		this->pos = pos;
 		this->speed = {7, 7};
-		this->radius = 6;
 	}
 
 	void flipYSpeed() {
@@ -76,8 +79,8 @@ public:
 
 	bool checkCollision(const Paddle& p) {
 		return CheckCollisionCircleRec(
-			Vector2{this->pos.x, this->pos.y}, 
-			this->radius, 
+			Vector2{this->pos.x, this->pos.y},
+			this->radius,
 			Rectangle{p.pos.x, p.pos.y, p.dim.x, p.dim.y}
 		);
 	}
@@ -87,7 +90,7 @@ public:
 	}
 
 	void draw() {
-		DrawCircle(this->pos.x, this->pos.y, this->radius, WHITE);
+		DrawCircle(this->pos.x, this->pos.y, this->radius, Yellow);
 	}
 
 };
@@ -139,10 +142,12 @@ int main(void) {
 
 		//draw
 		BeginDrawing();
-		ClearBackground(BLACK);
+		ClearBackground(Dark_Green);
+		DrawRectangle(windowWidth/2, 0, windowWidth/2, windowHeight, Green);
+		DrawCircle(windowWidth/2, windowHeight/2, 150, Light_Green);
 		DrawLine(windowWidth/2, 0, windowWidth/2, windowHeight, WHITE);
-		DrawText(TextFormat("%i", player.score), 20, windowHeight - 50, 40, WHITE);
-		DrawText(TextFormat("%i", opponent.score), windowWidth - 40, windowHeight - 50, 40, WHITE);
+		DrawText(TextFormat("%i", player.score), 40, windowHeight - 50, 40, WHITE);
+		DrawText(TextFormat("%i", opponent.score), windowWidth - 60, windowHeight - 50, 40, WHITE);
 		ball.draw();
 
 		player.draw();
